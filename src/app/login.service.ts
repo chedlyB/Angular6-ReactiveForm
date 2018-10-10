@@ -17,21 +17,28 @@ const httpOptions = {
 export class LoginService {
 
    
-  url = "https://localhost:4859" ; 
+  url = "https://localhossqddsqqdqst:4859" ; 
      _value : any ; 
 
   constructor(private http: HttpClient) { }
 
 
-  login (): Observable<any> {
-    this._value = 'aza' ; 
-      console.log(this.v ) ; 
+@Injectable()
 
-     return this.http.post<any>(this.url, this.v , httpOptions ).pipe(
-      tap((a: any) => this.log(`added person`)),
-      catchError(this.handleError<any>('addperson'))
-    );
-  }
+
+    login() {
+      
+        return this.http.post<any>(this.url+'/users', this.v )
+            .pipe(map(user => {
+                // login successful if there's a jwt token in the response
+                if (user && user.token) {
+                    // store user details and jwt token in local storage to keep user logged in between page refreshes
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                }
+
+                return user;
+            }));
+    }
 
  set v (newcontent: any){
    this._value = newcontent ; 

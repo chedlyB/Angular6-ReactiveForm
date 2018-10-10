@@ -1,5 +1,8 @@
+import { ReactiveFormComponent } from './../reactive-form/reactive-form.component';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoginService } from '../login.service';
+import { first } from 'rxjs/operators';
 
 
 @Component({
@@ -7,11 +10,12 @@ import { Router } from '@angular/router';
   templateUrl: './conditions.component.html',
   styleUrls: ['./conditions.component.css']
 })
+
 export class ConditionsComponent implements OnInit {
   marked = false;
   theCheckbox = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private loginservice : LoginService) { }
 
   toggleVisibility(e){
     this.marked= e.target.checked;
@@ -19,8 +23,16 @@ export class ConditionsComponent implements OnInit {
 
 
   validate() {
+ 
+    this.loginservice.login()
+    .pipe(first())
+    .subscribe(
+        data => {
+            this.router.navigate(['/checkbox']);
+          });
 
-
+  
+  
   }
 
   return() {
